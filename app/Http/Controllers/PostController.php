@@ -26,9 +26,7 @@ class PostController extends Controller
 
     public function index()
     {
-//       $post = Post::find(6)->users;
-//       return $post->orgnaization_id;
-        return response()->json($this->postService->getAllPost());
+       return response()->json($this->postService->getAllPost());
     }
 
     /**
