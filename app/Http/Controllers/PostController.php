@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
 use App\Http\Service\PostService;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -24,6 +26,8 @@ class PostController extends Controller
 
     public function index()
     {
+//       $post = Post::find(6)->users;
+//       return $post->orgnaization_id;
         return response()->json($this->postService->getAllPost());
     }
 
@@ -43,9 +47,11 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        //
+        $postDataStore = $request->validated();
+        return response()->json($this->postService->storePost($postDataStore));
+
     }
 
     /**
@@ -56,7 +62,8 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
+        $postDataToShow = $this->postService->showPost($id);
+        return response()->json($postDataToShow);
     }
 
     /**
@@ -77,15 +84,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StorePostRequest $request, $id)
     {
-        $postDataUpdate = $request->all();
-        $post = Post::find($id);
-        if (Auth::guard('api')->user()->can('update', $post)) {
-            return response()->json($this->postService->updatePost($postDataUpdate,$id));
-        } else {
-            echo 'Not Authorized.';
-        }
+        $postDataUpdate = $request->validated();
+        return response()->json($this->postService->updatePost($postDataUpdate,$id));
 
     }
 
@@ -97,11 +99,6 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        $post = Post::find($id);
-        if (Auth::guard('api')->user()->can('delete', $post)) {
-            return response()->json($this->postService->deletePost($id));
-        } else {
-            echo 'Not Authorized.';
-        }
+        return response()->json($this->postService->deletePost($id));
     }
 }
