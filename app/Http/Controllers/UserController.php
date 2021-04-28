@@ -22,7 +22,10 @@ class UserController extends Controller
      */
     public function index()
     {
-      return Auth::guard('api')->user()->isAdminOrg();
+        $userData = $this->userService->getAllUser();
+        return \App\Http\Resources\User::collection($userData)->additional([
+            "status" => 200
+        ]);
     }
 
     /**
@@ -41,9 +44,11 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-
+        $storeUserData = $request->validated();
+        $storedData = $this->userService->storeUser($storeUserData);
+        return response()->json($storedData);
     }
 
     /**
@@ -54,7 +59,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $userDataShowing = $this->showUser($id);
+        $userDataShowing = $this->userService->showUser($id);
         return response()->json($userDataShowing);
     }
 
@@ -80,7 +85,8 @@ class UserController extends Controller
     {
         $userData = $request->validated();
         $userDataUpdated = $this->userService->updateUser($userData, $id);
-        return response()->json($userDataUpdated);
+       return response()->json($userDataUpdated);
+
     }
 
     /**

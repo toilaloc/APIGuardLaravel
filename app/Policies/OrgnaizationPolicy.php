@@ -31,7 +31,7 @@ class OrgnaizationPolicy
      */
     public function view(User $user, Orgnaization $orgnaization)
     {
-
+        return $user->isAdmin() || $user->isAdminOrg();
     }
 
     /**
@@ -42,7 +42,7 @@ class OrgnaizationPolicy
      */
     public function create(User $user)
     {
-
+        return $user->isAdmin();
     }
 
     /**
@@ -54,7 +54,7 @@ class OrgnaizationPolicy
      */
     public function update(User $user, Orgnaization $orgnaization)
     {
-        //
+        return $user->isAdmin() || $user->isAdminOrg();
     }
 
     /**
@@ -66,6 +66,7 @@ class OrgnaizationPolicy
      */
     public function delete(User $user, Orgnaization $orgnaization)
     {
+        return $user->isAdmin() || $user->isAdminOrg();
     }
 
     /**

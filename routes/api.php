@@ -22,9 +22,9 @@ Route::post('login', [\App\Http\Controllers\APIController::class, 'login']);
 Route::post('register', [\App\Http\Controllers\APIController::class, 'register']);
 
 Route::group(['middleware' => 'jwt.auth'], function () {
-    Route::get('logout', [\App\Http\Controllers\APIController::class, 'logout']);
-    Route::get('users', [\App\Http\Controllers\UserController::class, 'index']);
     Route::post('refresh', [\App\Http\Controllers\APIController::class, 'refresh']);
+    Route::get('logout', [\App\Http\Controllers\APIController::class, 'logout']);
+    Route::apiResource('users', \App\Http\Controllers\UserController::class);
     Route::apiResource('posts',\App\Http\Controllers\PostController::class);
     Route::apiResource('orgnaizations',\App\Http\Controllers\OrgnaizationController::class)->middleware(\App\Http\Middleware\CheckAdmin::class);
 });

@@ -8,34 +8,49 @@ class OrgnaizationService
 
     public function getAllOrgnaization()
     {
-        $getAllOrgnaization = Orgnaization::all();
-        return $getAllOrgnaization;
+        if (Auth::guard('api')->user()->can('view')) {
+            $getAllOrgnaization = Orgnaization::all();
+            return $getAllOrgnaization;
+        }
+        return 'Not Authorized.';
     }
 
     public function storeOrgnaization($request)
     {
-        $orgnaizationStored = Orgnaization::create($request);
-        return $orgnaizationStored;
+        if (Auth::guard('api')->user()->can('create')) {
+            $orgnaizationStored = Orgnaization::create($request);
+            return $orgnaizationStored;
+        }
+        return 'Not Authorized.';
     }
 
     public function showOrgnaization($id)
     {
-        $findOrgnaizationToShow = Orgnaization::findOrFail($id);
-        return $findOrgnaizationToShow;
+        if (Auth::guard('api')->user()->can('create')) {
+            $findOrgnaizationToShow = Orgnaization::findOrFail($id);
+            return $findOrgnaizationToShow;
+        }
+        return 'Not Authorized.';
     }
 
     public function updateOrgnaization($request, $id)
     {
-        $findOrgnaizationToUpdate = Orgnaization::findOrFail($id);
-        $updateOrgnaizationData = $findOrgnaizationToUpdate->update($request);
-        return $updateOrgnaizationData;
+        if (Auth::guard('api')->user()->can('update')) {
+            $findOrgnaizationToUpdate = Orgnaization::findOrFail($id);
+            $updateOrgnaizationData = $findOrgnaizationToUpdate->update($request);
+            return $updateOrgnaizationData;
+        }
+        return 'Not Authorized.';
 
     }
 
     public function deleteOrgnaization($id)
     {
-        $findOrgnaizationToDelete = Orgnaization::findOrFail($id);
-        $orgnazationDeleted = $findOrgnaizationToDelete->delete();
-        return $orgnazationDeleted;
+        if (Auth::guard('api')->user()->can('delete')) {
+            $findOrgnaizationToDelete = Orgnaization::findOrFail($id);
+            $orgnazationDeleted = $findOrgnaizationToDelete->delete();
+            return $orgnazationDeleted;
+        }
+        return 'Not Authorized.';
     }
 }

@@ -50,10 +50,16 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    public function roles()
+    public function hasRoles()
     {
         return $this->hasMany(UserRole::class);
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(UserRole::class, 'user_role', 'user_id', 'role_id');
+    }
+
     public function posts()
     {
         return $this->hasMany(Post::class);
@@ -75,17 +81,17 @@ class User extends Authenticatable implements JWTSubject
 
     public function isAdmin()
     {
-        return $this->roles->first()->role_id === self::ADMIN_ROLE_ID;
+        return $this->hasRoles->first()->role_id === self::ADMIN_ROLE_ID;
     }
 
     public function isAdminOrg()
     {
-        return $this->roles->first()->role_id === self::ADMIN_ORG_ROLE_ID;
+        return $this->hasRoles->first()->role_id === self::ADMIN_ORG_ROLE_ID;
     }
 
     public function isWriter()
     {
-        return $this->roles->first()->role_id === self::WRITER_ROLE_ID;
+        return $this->hasRoles->first()->role_id === self::WRITER_ROLE_ID;
     }
 
     public function getJWTIdentifier()

@@ -22,7 +22,7 @@ class CheckAdmin
     public function handle(Request $request, Closure $next)
     {
         if (Auth::guard('api')->user()) {
-            $roleCurrentUser = Auth::guard('api')->user()->roles->first()->role_id;
+            $roleCurrentUser = Auth::guard('api')->user()->hasRoles->first()->role_id;
             if ($roleCurrentUser === self::ADMIN_ROLE_ID || $roleCurrentUser === self::ADMIN_ORG_ROLE_ID)
             {
                 return $next($request);
