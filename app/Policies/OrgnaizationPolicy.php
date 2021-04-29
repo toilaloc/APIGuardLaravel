@@ -31,7 +31,10 @@ class OrgnaizationPolicy
      */
     public function view(User $user, Orgnaization $orgnaization)
     {
-        return $user->isAdmin() || $user->isAdminOrg();
+//        $getOrgId = $orgnaization->id;
+//        $getOrgIdCurrentUser = Auth::guard('api')->user()->orgnaization_id;
+//        return $user->isAdmin() || $user->isAdminOrg() && $getOrgId == $getOrgIdCurrentUser;
+//        return $user->isAdmin();
     }
 
     /**
@@ -54,7 +57,9 @@ class OrgnaizationPolicy
      */
     public function update(User $user, Orgnaization $orgnaization)
     {
-        return $user->isAdmin() || $user->isAdminOrg();
+        $getOrgId = $orgnaization->users->orgnaization_id;
+        $getOrgIdCurrentUser = Auth::guard('api')->user()->orgnaization_id;
+        return $user->isAdmin() || $user->isAdminOrg() && $getOrgId === $getOrgIdCurrentUser;
     }
 
     /**
@@ -66,7 +71,9 @@ class OrgnaizationPolicy
      */
     public function delete(User $user, Orgnaization $orgnaization)
     {
-        return $user->isAdmin() || $user->isAdminOrg();
+        $getOrgId = $orgnaization->users->orgnaization_id;
+        $getOrgIdCurrentUser = Auth::guard('api')->user()->orgnaization_id;
+        return $user->isAdmin() || $user->isAdminOrg() && $getOrgId === $getOrgIdCurrentUser;
     }
 
     /**

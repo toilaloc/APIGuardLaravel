@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
 
 class UserPolicy
 {
@@ -40,7 +41,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return true;
+        return $user->isAdmin();
     }
 
     /**
@@ -52,7 +53,9 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        return $user->id === $model->id || $user->isAdmin() || $user->isAdminOrg();
+        $getOrgIdUsers = $model->orgnaization_id;
+        $getOrgIdCurrentUser = Auth::guard('api')->user()->orgnaization_id;
+        return $user->id == $model->id || $user->isAdmin() || $user->isAdminOrg() && $getOrgIdUsers === $getOrgIdCurrentUser;
     }
 
     /**

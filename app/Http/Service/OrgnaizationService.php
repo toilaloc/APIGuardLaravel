@@ -8,8 +8,9 @@ class OrgnaizationService
 
     public function getAllOrgnaization()
     {
-        if (Auth::guard('api')->user()->can('view')) {
-            $getAllOrgnaization = Orgnaization::all();
+        $currentUser = Auth::guard('api')->user();
+        if ($currentUser->isAdmin()) {
+            $getAllOrgnaization = Orgnaization::paginate(10);
             return $getAllOrgnaization;
         }
         return 'Not Authorized.';

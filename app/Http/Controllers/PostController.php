@@ -8,7 +8,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use App\Http\Traits\ResponseAPITrait;
 class PostController extends Controller
 {
     /**
@@ -17,8 +17,9 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public $postService;
-
+    use ResponseAPITrait;
+    private $postService;
+    private $resourcePath = "\App\Http\Resources\Post";
     public function __construct()
     {
         $this->postService = new PostService();
@@ -26,7 +27,12 @@ class PostController extends Controller
 
     public function index()
     {
-       return response()->json($this->postService->getAllPost());
+        $getAllPost = $this->postService->getAllPost();
+        $info = [
+            'status' => true,
+            'message' => 'All posts fetched successfully',
+        ];
+        return $this->responseAPI($getAllPost, $this->resourcePath, $info);
     }
 
     /**

@@ -6,7 +6,7 @@ use App\Http\Requests\StoreOrgnaizationRequest;
 use App\Http\Service\OrgnaizationService;
 use App\Models\Orgnaization;
 use Illuminate\Http\Request;
-
+use App\Http\Traits\ResponseAPITrait;
 class OrgnaizationController extends Controller
 {
     /**
@@ -15,7 +15,9 @@ class OrgnaizationController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public $orgnaizationService;
+    use ResponseAPITrait;
+    private $resourcePath = "App\Http\Resources\Orgnaization";
+    private $orgnaizationService;
 
     public function __construct()
     {
@@ -24,7 +26,12 @@ class OrgnaizationController extends Controller
 
     public function index()
     {
-        return response()->json($this->orgnaizationService->getAllOrgnaization());
+        $orgnaizationData = $this->orgnaizationService->getAllOrgnaization();
+        $info = [
+            'status' => true,
+            'message' => 'All orgnaizations fetched successfully',
+        ];
+        return $this->responseAPI($orgnaizationData, $this->resourcePath, $info);
     }
 
     /**

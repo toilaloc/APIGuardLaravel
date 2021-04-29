@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
+    CONST ADMIN_ROLE_ID = 1;
+    CONST ADMIN_ORG_ROLE_ID = 2;
+    CONST WRITER_ROLE_ID = 3;
+
     public function getAllUser()
     {
         $currentUser = Auth::guard('api')->user();
@@ -24,7 +28,7 @@ class UserService
     public function showUser($id)
     {
         $currentUser = Auth::guard('api')->user();
-        if ($currentUser->isAdmin() || $currentUser->isAdminOrg() || $currentUser->id === $id) {
+        if ($currentUser->isAdmin() || $currentUser->isAdminOrg() || $currentUser->id == $id) {
             $findUserToShow = User::findOrFail($id);
             return $findUserToShow;
         }
@@ -50,7 +54,14 @@ class UserService
             $request['password'] = Hash::make($request['password']);
             $userUpdated = $findUserToUpdate->update($request);
             $refreshData = $findUserToUpdate->refresh();
-            $refreshData->roles()->sync([3, 1]);
+            // If user is admin then can update roles.
+            if (Auth::guard('api')->user()->isAdmin()){
+                $refreshData->roles()->sync([
+                    self::ADMIN_ROLE_ID,
+                    self::ADMIN_ORG_ROLE_ID,
+                    self::WRITER_ROLE_ID
+                ]);
+            }
             return $refreshData;
         }
         return 'Not Authorized.';
@@ -61,7 +72,7 @@ class UserService
         $currentUser = Auth::guard('api')->user();
         if ($currentUser->isAdmin()) {
             $request['password'] = Hash::make($request['password']);
-            $dataUserStored = User::create($request)->roles()->attach([3,2]);
+            $dataUserStored = User::create($request)->roles()->attach([self::WRITER_ROLE_ID]);
             return $dataUserStored;
         }
         return 'Not Authorized.';

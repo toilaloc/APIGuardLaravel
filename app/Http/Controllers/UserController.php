@@ -6,10 +6,12 @@ use App\Http\Service\UserService;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Traits\ResponseAPITrait;
 class UserController extends Controller
 {
-    public $userService;
+    use ResponseAPITrait;
+    private $userService;
+    private $resourcePath = "App\Http\Resources\User";
     public function __construct()
     {
         $this->userService = new UserService();
@@ -23,9 +25,12 @@ class UserController extends Controller
     public function index()
     {
         $userData = $this->userService->getAllUser();
-        return \App\Http\Resources\User::collection($userData)->additional([
-            "status" => 200
-        ]);
+        $info = [
+            'status' => true,
+            'message' => 'All users fetched successfully',
+        ];
+        return $this->responseAPI($userData, $this->resourcePath, $info);
+
     }
 
     /**

@@ -56,7 +56,7 @@ class PostPolicy
     {
         $getOrgIdUsersPost = $post->users->orgnaization_id;
         $getOrgIdCurrentUser = Auth::guard('api')->user()->orgnaization_id;
-        return $user->isAdmin() || $getOrgIdUsersPost === $getOrgIdCurrentUser || $user->id === $post->user_id;
+        return $user->isAdmin() || $user->isAdminOrg() && $getOrgIdUsersPost === $getOrgIdCurrentUser || $user->id === $post->user_id;
     }
 
     /**
@@ -68,7 +68,9 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
-        return $user->isAdmin() || $user->isAdminOrg() || $user->id === $post->user_id;
+        $getOrgIdUsersPost = $post->users->orgnaization_id;
+        $getOrgIdCurrentUser = Auth::guard('api')->user()->orgnaization_id;
+        return $user->isAdmin() || $user->isAdminOrg() && $getOrgIdUsersPost === $getOrgIdCurrentUser  || $user->id === $post->user_id;
     }
 
     /**

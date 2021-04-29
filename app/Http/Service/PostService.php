@@ -10,7 +10,7 @@ class PostService
 
     public function getAllPost()
     {
-        return Post::all();
+        return Post::paginate(10);
     }
 
     public function storePost($request)
